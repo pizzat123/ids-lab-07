@@ -73,12 +73,12 @@ There's a weak relationship between bty_avg and score. geom_jitter() allows to v
 # remove eval = FALSE from the code chunk options after filling in the blanks
 score_bty_fit <- linear_reg() %>%
   set_engine("lm") %>%
-  fit(___ ~ ___, data = ___)
+  fit(bty_avg ~ score, data = evals)
 ```
 
 ```{r tidy-score_bty_fit, eval = FALSE}
 # remove eval = FALSE from the code chunk options after filling in the blanks
-tidy(___)
+tidy(score_bty_fit)
 ```
 
 *Add your linear model here. Don't worry too much about notation, you can use things like score-hat.*
@@ -86,33 +86,36 @@ tidy(___)
 2. Plot the data again using `geom_jitter()`, and add the regression line.
 
 ```{r viz-score_bty_fit,eval=FALSE}
-# add your plot here. Hint, you can add the regression line using geom_smooth()
+evals %>% 
+  ggplot(aes(x = bty_avg, y = score)) +
+  geom_jitter() +
+  geom_smooth(method = "lm", se = FALSE)
+  
 ```
 
 3. Interpret the slope of the linear model in context of the data.
-
-*Add your interpretation here*
+For every increase of bty_avg by 1, the score of the class is expected to be higher, on average, by 0.526 score. 
 
 4. Interpret the intercept of the linear model in context of the data. Comment on whether or not the intercept makes sense in this context.
-
-*Add your interpretation here*
+At the bty_avg of 0, the score is estimated to be at 2.22. This intercept makes sense in this context as, there may be professores who received a bty score of 0. 
 
 5. Determine the $R^2$ of the model and interpret it in the context of the data.
 
-```{r R2, eval = FALSE}
+```{r R2}
 # remove eval = FALSE from the code chunk options after filling in the blanks
-glance(___)$___
+glance(score_bty_fit)$r.squared
 ```
 
 *Add your interpretation here*
+Has a $r^2$ of 0.035, implying that there is no correlation. 
 
 6. Make a plot of residuals vs. predicted values for the model above.
 
-```{r viz-score_bty_fit-diagnostic, eval = FALSE}
+```{r viz-score_bty_fit-diagnostic, eva; = FALSE}
 # remove eval = FALSE from the code chunk options after filling in the blanks
 score_bty_aug <- augment(score_bty_fit$fit)
 
-ggplot(___) + ...
+ggplot(score_bty_aug) + ...
 ```
 
 # Exercise 3: Simple Linear regression with a categorical predictor

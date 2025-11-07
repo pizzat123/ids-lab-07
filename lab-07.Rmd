@@ -24,18 +24,46 @@ evals<-read.csv("data/evals.csv", row.names=1)
 1.  Visualize the distribution of `score` in the dataframe `evals`.
 
 ```{r viz-score}
-# add code here
+evals %>% 
+  ggplot(aes(x = score)) +
+  geom_histogram()
+
+evals %>% 
+  summarise(median_s = median(score),
+            mean_s   = mean(score),
+            range_s  = max(score) - min(score))
 ```
 
 *Add your other details and narratives here.*
+Using the visualization, the distribution has a negative skew, with the median score being 4.3 and the mean being 4.17. This implies that, on average, the sample population would rate their classes as very good (4). This is as expected as students would be able to choose their own classes, allowing them to pick classes that they are interested at, which would result in higher satisfaction. 
 
 2.  Visualize and describe the relationship between `score` and `bty_avg` using `geom_point()` to represent the data. 
 
 ```{r scatterplot}
-# add code here
+evals %>% 
+  ggplot(aes(x = bty_avg, y = score)) + 
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+
+evals %>% 
+  ggplot(aes(x = bty_avg, y = score)) +
+  geom_jitter() +
+  geom_smooth(method = "lm", se = FALSE)
+
+resid <- linear_reg() %>% 
+  set_engine("lm") %>% 
+  fit(bty_avg ~ score, data =evals)
+
+bty_avg_score_fit_aug <- augment(resid$fit)
+
+ggplot(bty_avg_score_fit_aug, mapping = aes(x = .fitted, y = .resid)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, color = "gray", lty = "dashed") +
+  labs(x = "Predicted score", y = "Residuals")
 ```
 
 *Add your narrative and other details here.*
+There's a weak relationship between bty_avg and score. geom_jitter() allows to visualise overlapping data points, so the first visualisation appeared as if there's a less plots.  
 
 # Exercise 2: Simple Linear regression with a numerical predictor
 
